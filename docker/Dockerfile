@@ -63,4 +63,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # PHP development settings
 COPY php.ini /usr/local/etc/php/conf.d/custom.ini
 
+RUN mkdir -p /tmp && chmod 777 /tmp
+
+RUN composer update
+
 WORKDIR /var/www/html
