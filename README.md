@@ -32,6 +32,7 @@ Example:
 APP_ENV=local
 
 # Database
+DB_NAME=db
 DB_PORT=3306
 DB_NAME=todoapp
 DB_USER=user
@@ -50,22 +51,29 @@ Start:
 docker compose up --build -d
 ```
 
-## Database
-
-Load initial schema manually:
-
-```
-docker exec -i mysql-todo mysql -u root -ppassword todoapp < migration/db.sql
-```
-
 App available at: http://localhost:8081
 
+## Database
+
+All *.sql files in migration/ will be executed in alphabetic order during the first docker build.
+
+Optional: Load initial schema manually:
+
+```
+docker exec -i mysql-todo mysql -u root -ppassword todoapp < migration/20150101000000_init.sql
+```
 ## Docker Commands
 
 Stop:
 
 ```bash
 docker compose down
+```
+
+Quick build
+
+```bash
+docker compose up -d --build
 ```
 
 Full rebuild:
@@ -76,10 +84,23 @@ docker compose build --no-cache
 
 Delete the existing data volumes and recreate everything:
 
+```     
+docker compose down -v
+docker compose up -d
 ```
-docker-compose down -v
-docker-compose up -d
+
+This clears /var/lib/mysql, so MySQL re-runs everything 
+in /docker-entrypoint-initdb.d/.
+
+
+Remove all
+
 ```
+docker compose down -v
+docker rmi php-multi-container-app-php
+docker rmi php-multi-container-app-db
+```
+
 
 ## Composer Commands
 
